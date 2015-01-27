@@ -166,9 +166,9 @@ JsKoansReporter.prototype.reportSpecResults = function(spec) {
   if ( !results.passed() ) {
     this.failedSpecs += 1;
 
-    description = "It " + spec.description + ". It is damaging your karma."
+    description = "It " + spec.description + ". It is damaging your karma.";
   } else {
-    description = "Knowing it " + spec.description + " has expanded your awareness."
+    description = "Knowing it " + spec.description + " has expanded your awareness.";
   }
 
   var specDiv = this.createDom('div', { className: 'spec '  + skipStatus },

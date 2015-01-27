@@ -1,4 +1,6 @@
 window.BootCampSuite = angular.module('BootCampSuite', []);
+window.LabSlug = 'missing_number';
+window.CategoryId = 'BootCamp';
 
 BootCampSuite.run(['$rootScope','Reporter', function($rootScope, Reporter) {
   $rootScope._ = window._;
@@ -6,41 +8,59 @@ BootCampSuite.run(['$rootScope','Reporter', function($rootScope, Reporter) {
 }]);
 
 BootCampSuite.factory('Refs', function() {
-  var rootRef = new Firebase("https://bootcamp-suite.firebaseio.com/");
-  var username = localStorage.getItem("username");
-  while(!username) {
-    username = prompt('Please enter your name');
-    localStorage.setItem("username", username);
+  var rootRef = new Firebase("https://andelab-dev.firebaseio.com/");
+  var uid = localStorage.getItem("username");
+  while(!uid) {
+    uid = prompt('Please enter your name');
+    localStorage.setItem("username", uid);
   }
 
   return {
-    cohort:  rootRef.child('class-4'),
-    students: rootRef.child('class-4').child('students'),
-    exercises: rootRef.child('class-4').child('exercises').child(lab_name),
-    currentUser: rootRef.child('class-4').child('students').child(username)
+    queue: rootRef.child('queue'),
+    started: rootRef.child(uid).child('started_labs'),
+    completed: rootRef.child(uid).child('completed_labs'),
+    session: rootRef.child('sessions').child(uid).child(LabSlug)
   };
 });
 
 BootCampSuite.factory('Reporter', ['Refs', function(Refs) {
-  var username = localStorage.getItem("username");
+  var uid = localStorage.getItem("username");
   var timestamp = Number(new Date());
   return {
-    push: function(result, cb) {
-      Refs.exercises.child(username).remove(function(err) {
-        if(err) {
-          console.log("something broke in exercise child remove: ", err);
-        }
-        else {
-          Refs.exercises.child(username).push(result, cb);
+    reportComplete: function(cb) {
+      //remove from started_labs
+      Refs.started.once('value', function(startedSnap) {
+        if(startedSnap.val()) {
+          var startedArray = startedSnap.val();
+          var labIndex = startedArray.indexOf(LabSlug);
+          var completedLab = startedArray.splice(labIndex, 1);
+          Refs.started.set(started, function(error) {
+            if(!error) {
+              //add to completed labs
+              Refs.completed.once('value', function(completedSnap) {
+                if(completedSnap.val()) {
+                  var completedArray = completedSnap.val();
+                  completedArray.push(completedLab);
+                  Refs.completed.set(completedArray);
+                }
+              });
+            }
+          });
         }
       });
-      Refs.currentUser.child(lab_name).remove(function(err) {
-        if(err) {
-          console.log("something broke in currentUser labname remove: ", err);
-        }
-        else {
-          Refs.currentUser.child(lab_name).push(result, cb);
-        }
+
+      //add completed timestamp to sessions
+
+      Refs.session.child('completed_at').set(Firebase.ServerValue.TIMESTAMP);
+
+      //write to queue
+
+      Ref.queue.set({
+        organization_id: 'andela',
+            metric_id: CategoryId,
+            created_at: Firebase.ServerValue.TIMESTAMP,
+            user_id: uid,
+            value: 1,
       });
     }
   };
