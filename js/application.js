@@ -1,6 +1,4 @@
 window.BootCampSuite = angular.module('BootCampSuite', []);
-window.LabSlug = 'missing_number';
-window.CategoryId = 'BootCamp';
 
 BootCampSuite.run(['$rootScope','Reporter', function($rootScope, Reporter) {
   $rootScope._ = window._;
@@ -31,18 +29,26 @@ BootCampSuite.factory('Refs', ['$rootScope',
 BootCampSuite.factory('Authentication', ['Refs', '$rootScope', function(Refs, $rootScope) {
   return {
     auth: function (uid, cb) {
+      var that = this;
       Refs.user.once('value', function(snap) {
         if(snap.val()) {
           cb(snap.val());
         }
         else {
-          alert('Invalid user id\n\nSign up at Andelabs');
+          alert('Invalid `user-id`\n\nPlease, sign up at Andelabs and get a valid `user-id`');
+          that.logout();
         }
       });
     },
     login: function() {
       Refs.root.authWithOAuthPopup('google', function(err,data) {
       }, {remember: true, scope: 'email'});
+    },
+    logout: function() {
+      window.localStorage.removeItem('uid');
+      delete $rootScope.uid;
+      window.location.reload();
+      return false;
     }
   };
 }]);
@@ -55,9 +61,7 @@ BootCampSuite.factory('Reporter', ['Refs', '$rootScope', function(Refs, $rootSco
       var uid = $rootScope.uid;
       Refs.started.once('value', function(startedSnap) {
         var startedArray = startedSnap.val();
-
         if(startedArray) {
-
           var labIndex = startedArray.indexOf(LabSlug);
           var completedLab = startedArray.splice(labIndex, 1);
           Refs.started.set(startedArray, function(error) {
@@ -73,19 +77,20 @@ BootCampSuite.factory('Reporter', ['Refs', '$rootScope', function(Refs, $rootSco
               });
             }
           });
+          //add completed timestamp to sessions
+          Refs.session.child('completed_at').set(Firebase.ServerValue.TIMESTAMP, function(err) {
+            if(!err) {
+              //write to queue
+              Refs.queue.push({
+                organization_id: 'andela',
+                    metric_id: CategoryId,
+                    created_at: Firebase.ServerValue.TIMESTAMP,
+                    user_id: uid,
+                    value: 1,
+              });
+            }
+          });
         }
-      });
-
-      //add completed timestamp to sessions
-      Refs.session.child('completed_at').set(Firebase.ServerValue.TIMESTAMP);
-
-      //write to queue
-      Refs.queue.push({
-        organization_id: 'andela',
-            metric_id: CategoryId,
-            created_at: Firebase.ServerValue.TIMESTAMP,
-            user_id: uid,
-            value: 1,
       });
     }
   };
@@ -106,9 +111,9 @@ BootCampSuite.controller('SuiteCtrl', ['Refs', 'Authentication','Reporter','$sco
     }
   });
 
-  $scope.login = function() {
-    window.localStorage.removeItem($rootScope.uid);
-    delete $rootScope.uid;
-    return false;
+  $scope.logout = function() {
+   if(confirm('Are you sure you want to end your session?')) {
+    Authentication.logout();
+   }
   };
 }]);

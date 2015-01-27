@@ -3,8 +3,12 @@
 <html>
 <head>
   <title>Maximum number in a list</title>
-  <link rel="stylesheet" type="text/css" href="./js/lib/jasmine/jskoans-jasmine.css">
 
+  <link rel="stylesheet" type="text/css" href="./js/lib/jasmine/jskoans-jasmine.css">
+  <script type="text/javascript">
+  window.LabSlug = 'missing_number';
+  window.CategoryId = 'BootCamp';
+  </script>
   <script type="text/javascript" src="./js/lib/angular/angular.js"></script>
   <script type="text/javascript" src="./js/lib/firebase/firebase.js"></script>
 
@@ -21,13 +25,9 @@
   <script type="text/javascript" src="./js/application.js"></script>
 </head>
 <body ng-app="BootCampSuite">
-<script type="text/javascript">
-  var lab_name = "missing_number";
-  var moduleName = "Find Missing Number in two Lists";
-</script>
 <div ng-controller="SuiteCtrl">
-  <blockquote ng-if="uid">
-    <a href="#" ng-click="login();">Sign Out</a>
+  <p ng-if="uid">
+    <pre>You are signed in.</pre> <button ng-click="logout();">Sign Out</button>
   </blockquote>
 </div>
 </body>
