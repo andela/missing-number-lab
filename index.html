@@ -21,10 +21,14 @@
   <script type="text/javascript" src="./js/application.js"></script>
 </head>
 <body ng-app="BootCampSuite">
-<script>
+<script type="text/javascript">
   var lab_name = "missing_number";
   var moduleName = "Find Missing Number in two Lists";
 </script>
-<div ng-controller="SuiteCtrl"></div>
+<div ng-controller="SuiteCtrl">
+  <blockquote ng-if="uid">
+    <a href="#" ng-click="login();">Sign Out</a>
+  </blockquote>
+</div>
 </body>
 </html>

@@ -131,6 +131,12 @@ JsKoansReporter.prototype.reportRunnerResults = function(runner) {
       self.outerDiv.className = self.outerDiv.className.replace(/ show-skipped/, '');
     }
   };
+
+  //push results to firebase if user passes all tests
+  if(specsCount - this.failedSpecs === specsCount) {
+    console.log('Lab completed');
+    Reporter.reportComplete();
+  }
 };
 
 JsKoansReporter.prototype.reportSuiteResults = function(suite) {
@@ -195,8 +201,6 @@ JsKoansReporter.prototype.reportSpecResults = function(spec) {
       type: String(result.type)
     };
 
-    //push results to firebase
-    Reporter.push(props);
 
     if (result.type == 'expect' && result.passed && !result.passed()) {
       messagesDiv.appendChild(
