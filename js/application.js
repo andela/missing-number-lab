@@ -9,10 +9,10 @@ BootCampSuite.factory('Refs', ['$rootScope',
   function($rootScope) {
     var rootRef = new Firebase("https://andelabs-dev.firebaseio.com/");
 
-    var uid = window.localStorage.getItem("uid");
+    var uid = window.localStorage.getItem("labUid");
     while(!uid) {
-      uid = prompt('Please enter your name');
-      window.localStorage.setItem("uid", uid);
+      uid = prompt('Please enter your labs uid');
+      window.localStorage.setItem("labUid", uid);
     }
     $rootScope.uid = uid;
     var userRef = rootRef.child('users').child(uid);
@@ -29,14 +29,14 @@ BootCampSuite.factory('Refs', ['$rootScope',
 BootCampSuite.factory('Authentication', ['Refs', '$rootScope', function(Refs, $rootScope) {
   return {
     auth: function (uid, cb) {
-      var that = this;
+      var self = this;
       Refs.user.once('value', function(snap) {
         if(snap.val()) {
           cb(snap.val());
         }
         else {
           alert('Invalid `user-id`\n\nPlease, sign up at Andelabs and get a valid `user-id`');
-          that.logout();
+          self.logout();
         }
       });
     },
@@ -45,7 +45,7 @@ BootCampSuite.factory('Authentication', ['Refs', '$rootScope', function(Refs, $r
       }, {remember: true, scope: 'email'});
     },
     logout: function() {
-      window.localStorage.removeItem('uid');
+      window.localStorage.removeItem('labUid');
       delete $rootScope.uid;
       window.location.reload();
       return false;
