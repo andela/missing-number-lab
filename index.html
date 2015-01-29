@@ -2,9 +2,9 @@
   "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Maximum number in a list</title>
+  <title>AndeLabs, Maximum number in a list</title>
 
-  <link rel="stylesheet" type="text/css" href="./js/lib/jasmine/jskoans-jasmine.css">
+  <link rel="stylesheet" type="text/css" href="./js/lib/jasmine/jasmine.css">
   <script type="text/javascript">
   window.LabSlug = 'missing_number';
   window.CategoryId = 'BootCamp';
@@ -12,9 +12,10 @@
   <script type="text/javascript" src="./js/lib/angular/angular.js"></script>
   <script type="text/javascript" src="./js/lib/firebase/firebase.js"></script>
 
-  <script type="text/javascript" src="./js/lib/jasmine/jasmine.js"></script>
-  <script type="text/javascript" src="./js/lib/jasmine/jasmine-html.js"></script>
-  <script type="text/javascript" src="./js/lib/jasmine/jskoans-jasmine-html.js"></script>
+  <script src="./js/lib/jasmine/jasmine.js"></script>
+  <script src="./js/lib/jasmine/jasmine-html.js"></script>
+  <script src="./js/lib/jasmine/boot.js"></script>
+  <!-- <script src="./js/lib/jasmine/reporter.js"></script> -->
 
   <script type="text/javascript" src="./js/lib/underscore-min.js"></script>
 
@@ -24,11 +25,9 @@
 
   <script type="text/javascript" src="./js/application.js"></script>
 </head>
-<body ng-app="BootCampSuite">
-<div ng-controller="SuiteCtrl">
-  <p ng-if="uid">
-    <pre>You are signed in.</pre> <button ng-click="logout();">Sign Out</button>
-  </blockquote>
+<body ng-app="AndeLabs">
+<div ng-controller="LabCtrl">
+  <!--  Results injected here? -->
 </div>
 </body>
 </html>

@@ -1,13 +1,13 @@
-window.BootCampSuite = angular.module('BootCampSuite', []);
+window.AndeLabs = angular.module('AndeLabs', []);
 
-BootCampSuite.run(['$rootScope','Reporter', function($rootScope, Reporter) {
+AndeLabs.run(['$rootScope','Reporter', function($rootScope, Reporter) {
   $rootScope._ = window._;
   window.Reporter = Reporter;
 }]);
 
-BootCampSuite.factory('Refs', ['$rootScope',
+AndeLabs.factory('Refs', ['$rootScope',
   function($rootScope) {
-    var rootRef = new Firebase("https://andelabs-dev.firebaseio.com/");
+    var rootRef = new Firebase("https://AndeLabs-dev.firebaseio.com/");
 
     var uid = window.localStorage.getItem("labUid");
     while(!uid) {
@@ -26,7 +26,7 @@ BootCampSuite.factory('Refs', ['$rootScope',
     };
 }]);
 
-BootCampSuite.factory('Authentication', ['Refs', '$rootScope', function(Refs, $rootScope) {
+AndeLabs.factory('Authentication', ['Refs', '$rootScope', function(Refs, $rootScope) {
   return {
     auth: function (uid, cb) {
       var self = this;
@@ -35,7 +35,7 @@ BootCampSuite.factory('Authentication', ['Refs', '$rootScope', function(Refs, $r
           cb(snap.val());
         }
         else {
-          alert('Invalid `user-id`\n\nPlease, sign up at Andelabs and get a valid `user-id`');
+          alert('Invalid `user-id`\n\nPlease, sign up at AndeLabs and get a valid `user-id`');
           self.logout();
         }
       });
@@ -53,7 +53,7 @@ BootCampSuite.factory('Authentication', ['Refs', '$rootScope', function(Refs, $r
   };
 }]);
 
-BootCampSuite.factory('Reporter', ['Refs', '$rootScope', function(Refs, $rootScope) {
+AndeLabs.factory('Reporter', ['Refs', '$rootScope', function(Refs, $rootScope) {
 
   return {
     reportComplete: function(cb) {
@@ -96,15 +96,15 @@ BootCampSuite.factory('Reporter', ['Refs', '$rootScope', function(Refs, $rootSco
   };
 }]);
 
-BootCampSuite.controller('SuiteCtrl', ['Refs', 'Authentication','Reporter','$scope', '$rootScope',
+AndeLabs.controller('LabCtrl', ['Refs', 'Authentication','Reporter','$scope', '$rootScope',
   function(Refs, Authentication, Reporter, $scope, $rootScope) {
 
   $rootScope.$watch('uid', function(newValue) {
     if(newValue) {
       Authentication.auth($rootScope.uid, function(authData) {
         if(authData) {
-          jasmine.getEnv().addReporter(new JsKoansReporter());
-          jasmine.getEnv().execute();
+          htmlReporter.initialize();
+          env.execute();
         }
         console.log($rootScope.uid, 'reporter initialized');
       });
