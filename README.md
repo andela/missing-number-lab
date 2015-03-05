@@ -20,9 +20,7 @@ One of the arrays will have one extra number, see below
 
 ##Notes
 
-You should get familiar with javascript classes, prototyping, returning, and conditional statements.
-
-+ Prior understanding of Javascript classes are required. Prototyping of the Array class will be required to complete this exercise.
++ Prior understanding of Javascript classes, prototyping, returning, and conditional statements will be required to complete this exercise.
 
 + Remember that passing code is just the first step. The goal is to work towards a solution that is as readable and expressive as you can make
 it.
